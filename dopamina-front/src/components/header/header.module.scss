@@ -1,0 +1,30 @@
+header {
+    display: flex;
+    align-items: center;
+    // justify-content: center;
+    
+    padding: 5px;
+    
+    border: 1px solid red;
+
+    .navLinks {
+        margin-left: 70%;
+
+        ul {
+            display: flex;
+            li {
+                display: flex;
+                margin: 5px;
+            }
+        }
+    }
+
+    .navButtons {
+        display: flex;
+        flex-direction: row-reverse;
+        margin: 10px;
+        button {
+            margin: 5px;
+        }
+    }
+}
