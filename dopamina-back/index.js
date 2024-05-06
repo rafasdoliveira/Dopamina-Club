@@ -135,6 +135,14 @@ const createempresa = async (request, response) => {
 const login = async (request, response) => {
     const { email, senha } = request.body;
 
+    const campos = { email, senha };
+
+    for (const campo in campos) {
+        if (!campos[campo]) {
+            return response.status(400).json({ error: `Por favor, preencha o campo ${campo}` });
+        }
+    }
+
     try {
         const { data: usuario, error: errorUsuario } = await supabase
             .from('usuarios')
@@ -142,40 +150,35 @@ const login = async (request, response) => {
             .eq('email', email)
             .single();
 
-        if (usuario && usuario.senha === senha) {
-            
-            const token = gerarToken(usuario.id, 'usuario'); 
-            return response.status(200).json({ message: 'Login realizado com sucesso', token });
-        }
-
         const { data: empresa, error: errorEmpresa } = await supabase
             .from('empresas')
             .select('*')
             .eq('email', email)
             .single();
 
-        if (empresa && empresa.senha === senha) {
-            
-            const token = gerarToken(empresa.id, 'empresa'); 
-            return response.status(200).json({ message: 'Login realizado com sucesso', token });
+        if (usuario && usuario.senha === senha) {
+            return response.status(200).json({ message: 'Login realizado com sucesso' });
+        } else if (empresa && empresa.senha === senha) {
+            return response.status(200).json({ message: 'Login realizado com sucesso' });
+        } else {
+            return response.status(401).json({ error: 'Credenciais inválidas' });
         }
-
-        return response.status(401).json({ error: 'Credenciais inválidas' });
     } catch (error) {
         console.error('Erro ao fazer login: ', error);
         return response.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
+
 // Rotas Globais
 app.get('/home', home)
 app.get('/helloworld', helloworld)
 // Usuários
 app.post('/usuarios', createusuario)
-app.get('/login', login)
 // Empresas
 app.post('/empresas', createempresa)
 
+app.post('/login', login)
 
 app.listen(port, () => {
     console.log(`Aplicação rodando na porta: ${port}`)

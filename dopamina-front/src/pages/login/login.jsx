@@ -1,9 +1,9 @@
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-import Header from '../../components/header/header'
-import Input from '../../components/form/input/input'
 import Button from '../../components/button/button'
+import Input from '../../components/form/input/input'
+import Header from '../../components/header/header'
 
 import styles from './login.module.scss'
 
@@ -14,34 +14,40 @@ const Login = () => {
     senha: ''
   })
 
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+      e.preventDefault()
+
       try {
-        const response = await axios.post('http://localhost:5173/login', login)
+        const response = await axios.post('http://localhost:8081/login', login)
         setLogin({
           ...login, 
           email: login.email,
           senha: login.senha
         })
         alert(response.data.message)
+        setLogin({ email: '', senha: '' });
       }
-      catch (error) {
-        console.log(error)
-      }
+      catch(error) {
+        let errorMessage = 'Ocorreu um erro ao realizar o login. Por favor, tente novamente mais tarde.';
+   
+         if (error.response && error.response.data && error.response.data.error) {
+           errorMessage = error.response.data.error;
+         }
+         
+         alert(errorMessage);
+         console.log(`Erro ao logar: ${error}`);
+       } 
     }
-
-    useEffect(() => {
-      handleLogin()
-    }, [])
 
   return (
     <div className={styles.cadastro__individual}>
       <Header/>
       <div className={styles.container_form}>
         <h3>Informe seus dados para realizar o login!</h3>
-        <form >
-          <Input value={login.email} type='text' placeholder='Insira seu nome' onChange={(e) => setLogin({...login, email: e.target.value})}/>
-          <Input value={login.senha} type='password' placeholder='Insira seu e-mail' onChange={(e) => setLogin({...login, senha: e.target.value})}/>
-          <Button type='submit' text='Entrar' onClick={handleLogin}/>
+        <form onSubmit={handleLogin}>
+          <Input value={login.email} type='text' placeholder='Insira seu e-mail' onChange={(e) => setLogin({...login, email: e.target.value})}/>
+          <Input value={login.senha} type='password' placeholder='Insira sua senha' onChange={(e) => setLogin({...login, senha: e.target.value})}/>
+          <Button type='submit' text='Entrar'/>
         </form>
       </div>
     </div>
