@@ -5,6 +5,8 @@ const { createClient } = require('@supabase/supabase-js')
 const env = require('dotenv').config()
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const nodemailer = require('nodemailer')
+
 
 const url = process.env.URL
 const apiKey = process.env.API_KEY
@@ -29,6 +31,34 @@ const home = (request, response) => {
 const helloworld = (request, response) => {
     response.send('<h1>Hello World!</h1>\n<p>Olá mundo! A aplicação Dopamina Back está rodando!</p>')
 }
+
+// Envio de e-mail
+const transport = nodemailer.createTransport ({
+    host: 'smtp-mail.outlook.com',
+    port: 587, 
+    secure: false,
+    auth: {
+        user: process.env.USER_MAIL, 
+        pass: process.env.PASS_MAIL
+    }
+})
+
+const sendConfirmationEmail = async ({recipientEmail, recipientName}) => {
+    try {
+        await transport.sendMail({
+            from: 'Dopamina Club <dopaminaclub@outlook.com>',
+            to: recipientEmail,
+            subject: 'Enviando e-mail com NodeMailer',
+            html: `<h1>Seja bem vindo ao Dopamina Club</h1> <p>${recipientName}, estamos felizes por você parte disso!</p>`,
+        })
+        
+        console.log('Enviado com sucesso!')
+    }
+    catch (error) {
+        console.log(error)
+    }
+}
+
 // Criando usuário
 const createusuario = async (request, response) => {
     const { nome, email, telefone, senha } = request.body;
@@ -64,8 +94,10 @@ const createusuario = async (request, response) => {
                 return response.status(500).json({ error: 'Internal Server Error' });
             }
 
-        response.status(201).json({ message: 'Usuário criado com sucesso' });
-
+            await sendConfirmationEmail({recipientEmail: email, recipientName: nome})
+            response.status(201).json({ message: 'Usuário criado com sucesso' });
+       
+      
     } catch (error) {
         console.error('Erro ao criar usuário: ', error);
         return response.status(500).json({ error: 'Internal Server Error' });
