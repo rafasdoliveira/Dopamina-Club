@@ -1,13 +1,21 @@
+import Button from './components/button/button'
 import Header from './components/header/header'
 import styles from './styles/global.module.scss'
 
 function App() {
   
   return (
-    <div className={styles.app}>
+    <>
       <Header/>
-      <p>Desenvolvimento pessoal, relacionamentos saudáveis e compromisso através de desafios personalizados</p>
-    </div>
+      <div className={styles.app}>
+          <main>
+            <h1>Dopamina Club</h1>
+            <p>Promovemos desenvolvimento pessoal, relacionamentos saudáveis e motivação para pessoas e empresas. </p>
+          
+            <Button id='home' text='Quero fazer parte!'/>
+          </main>
+      </div>
+    </>
   )
 }
 

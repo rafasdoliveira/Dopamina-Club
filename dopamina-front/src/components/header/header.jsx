@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import Button from '../button/button'
+
 import styles from './header.module.scss'
 
 const Header = () => {
@@ -12,7 +13,7 @@ const Header = () => {
   
     return (
         <header>
-            <Link to='/'> <h1>DC</h1> </Link>
+            <Link to='/'><h1>DC</h1></Link>
             <nav className={styles.navLinks}>
                 <ul>
                     {navLinks.map((item) => (
@@ -25,8 +26,7 @@ const Header = () => {
                 </ul>
             </nav>
             <nav className={styles.navButtons}>
-                <Button text='login' />
-                <Button text='cadastre-se' />
+                <Button id='header' text='Já sou DC' />
             </nav>
         </header>
   )

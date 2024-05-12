@@ -1,11 +1,13 @@
 header {
     display: flex;
     align-items: center;
-    // justify-content: center;
+    width: 100vw;
     
     padding: 5px;
-    
-    border: 1px solid red;
+
+    h1 {
+        margin-left: 20px;
+    }
 
     .navLinks {
         margin-left: 70%;
@@ -15,6 +17,15 @@ header {
             li {
                 display: flex;
                 margin: 5px;
+
+                font-weight: 500;
+                text-transform: uppercase;
+            }
+
+            li:hover {
+                transition: 1s;
+                color: orangered;
+                text-decoration: underline;
             }
         }
     }
@@ -23,6 +34,7 @@ header {
         display: flex;
         flex-direction: row-reverse;
         margin: 10px;
+
         button {
             margin: 5px;
         }

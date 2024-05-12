@@ -6,6 +6,10 @@ import Empresas from './pages/cadastro/empresas/cadastroEmpresas';
 import Usuarios from './pages/cadastro/usuarios/cadastroUsuario.jsx';
 import Login from './pages/login/login.jsx'
 
+// import dotenv from 'dotenv'
+
+// dotenv.config()
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>

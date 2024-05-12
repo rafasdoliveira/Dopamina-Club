@@ -1,10 +1,11 @@
-import axios from 'axios'
+// import axios from 'axios'
 import { useState } from 'react';
 
 import Header from '../../../components/header/header'
 import Input from '../../../components/form/input/input'
 import Button from '../../../components/button/button'
 import { PhoneInput } from 'react-international-phone';
+import { cadastroEmpresa } from '../../services/apiService';
 
 import styles from './cadastroEmpresarial.module.scss'
 
@@ -22,16 +23,15 @@ const CadastroEmpresarial = () => {
     e.preventDefault()
 
     try {
-      const response = await axios.post('http://localhost:8081/empresas', form)
-      setForm({
-        ...form,
-        nome_fantasia: form.nome_fantasia,
-        email: form.email,
-        telefone: form.telefone,
-        cnpj: form.cnpj,
-        senha: form.senha
+      const response = await cadastroEmpresa(form)
+        setForm({
+          ...form,
+          nome_fantasia: form.nome_fantasia,
+          email: form.email,
+          telefone: form.telefone,
+          cnpj: form.cnpj,
+          senha: form.senha
       })
-
       alert(response.data.message)
       console.log({ response })
     }

@@ -1,0 +1,63 @@
+@use '../../styles/base.scss';
+
+@mixin baseButton {
+    width: 75px;
+    height: 30px;
+
+    padding: 5px;
+
+    font-weight: bold;
+    text-transform: uppercase;
+
+    border: 1px solid #000;
+    border-radius: 5px;
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+@mixin headerButton {
+    @include baseButton;
+    background-color: orangered;
+    color: #fff;
+
+    &:hover {
+        background-color: #fff;
+        border: 1px solid orangered;
+        color: orangered;
+        transition: 2s;
+    }
+}
+
+@mixin homeButton {
+
+    width: 30%;
+    height: 40px;
+
+    border: none;
+    border-radius: 5px;
+
+    background-color: orangered;
+    color: #fff;
+
+    font-weight: bold;
+    text-transform: uppercase;
+
+    &:hover {
+        background-color: #fff;
+        border: 1px solid orangered;
+        color: orangered;
+        transition: 2s;
+    }
+}
+
+.primaryButton {
+    @include baseButton;
+}
+
+.secondaryButton {
+    @include headerButton;
+}
+
+.tertiaryButton {
+    @include homeButton
+}
