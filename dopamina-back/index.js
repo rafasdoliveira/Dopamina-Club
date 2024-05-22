@@ -61,8 +61,8 @@ const sendConfirmationEmail = async ({recipientEmail, recipientName}) => {
 
 // Criando usuário
 const createusuario = async (request, response) => {
-    const { nome, email, telefone, senha } = request.body;
-    const campos = { nome, email, telefone, senha };
+    const { nome, usuario, email, telefone, senha } = request.body;
+    const campos = { nome, usuario, email, telefone, senha };
 
     for (const campo in campos) {
         if (!campos[campo]) {
@@ -82,7 +82,7 @@ const createusuario = async (request, response) => {
            .eq("email", email)
 
             if(emailExistente && emailExistente.length > 0) {
-                return response.status(400).json({error: 'E-mail já cadastrado'})
+                return response.status(409).json({error: 'E-mail já cadastrado'})
             }
 
             const { data, error: insiraError } = await supabase
@@ -91,7 +91,7 @@ const createusuario = async (request, response) => {
            
             if (insiraError) {
                 console.error('Erro ao criar usuário: ', error);
-                return response.status(500).json({ error: 'Internal Server Error' });
+                return response.status(400).json({ error: 'Internal Server Error' });
             }
 
             await sendConfirmationEmail({recipientEmail: email, recipientName: nome})

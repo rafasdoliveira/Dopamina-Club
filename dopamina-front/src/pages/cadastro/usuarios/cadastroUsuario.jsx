@@ -1,67 +1,148 @@
-import axios from 'axios'
+/* eslint-disable react/prop-types */
+import axios from 'axios';
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-import Header from '../../../components/header/header';
-import Input from '../../../components/form/input/input';
-import { PhoneInput } from 'react-international-phone';
 import Button from '../../../components/button/button';
+import Input from '../../../components/form/input/input';
+import Header from '../../../components/header/header';
 
-import styles from './cadastroIndividual.module.scss'
 import 'react-international-phone/style.css';
+import styles from './cadastroIndividual.module.scss';
+
+import EmailIcon from '../../../assets/icons/envelope-solid.svg';
+import SenhaIcon from '../../../assets/icons/lock-solid.svg';
+import UsuarioIcon from '../../../assets/icons/user-solid-2.svg';
 
 const CadastroIndividual = () => {
-  
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     nome: '',
+    usuario: '',
     email: '',
     telefone: '',
-    senha: ''
-  })
+    senha: '',
+  });
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8081/usuarios', form)
+      const response = await axios.post('http://localhost:8081/usuarios', form);
       setForm({
         ...form,
         nome: form.nome,
+        usuario: form.usuario,
         email: form.email,
         telefone: form.telefone,
-        senha: form.senha
-      })
+        senha: form.senha,
+      });
 
-      alert(response.data.message)
-      console.log({ response })
-    }
-    catch(error) {
-      let errorMessage = 'Ocorreu um erro ao cadastrar usuário. Por favor, tente novamente mais tarde.';
+      alert(response.data.message);
+      navigate('/login');
+      console.log({ response });
+    } catch (error) {
+      let errorMessage =
+        'Ocorreu um erro ao cadastrar usuário. Por favor, tente novamente mais tarde.';
 
       if (error.response && error.response.data && error.response.data.error) {
         errorMessage = error.response.data.error;
       }
-      
+
       alert(errorMessage);
       console.log(`Erro ao cadastrar o usuário: ${error}`);
-    } 
-  }
+    }
+  };
+
+  const InputGroup = ({ label, value, placeholder, src, type, onChange }) => (
+    <div className={styles.input__group}>
+      <label>{label}</label>
+      <Input
+        value={value}
+        src={src}
+        type={type}
+        placeholder={placeholder}
+        onChange={onChange}
+      />
+    </div>
+  );
 
   return (
     <div className={styles.cadastro__individual}>
-      <Header/>
-      <div className={styles.container_form}>
-        <h3>Registre sua conta individual!</h3>
-        <p>Preenche o formulário para começar.</p>
-        <form onSubmit={handleSubmit}>
-          <Input value={form.nome} type='text' placeholder='Insira seu nome' onChange={(e) => setForm({...form, nome: e.target.value})}/>
-          <Input value={form.email} type='email' placeholder='Insira seu e-mail' onChange={(e) => setForm({...form, email: e.target.value})}/>
-          <PhoneInput value={form.telefone} defaultCountry="br" onChange={(value) => setForm({...form, telefone: value})}/>
-          <Input value={form.senha} type='password' placeholder='Defina uma senha senha' onChange={(e) => setForm({...form, senha: e.target.value})} />
-          <Button type='submit' text='Registrar' />
-        </form>
+      <Header />
+      <div className={styles.container}>
+        <div className={styles.chamada}>
+          <span>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum iusto
+            a fugit ea sequi dignissimos totam tempora nulla maiores odit,
+            expedita ipsum laborum, non neque! Quas, blanditiis vero! Quia,
+            deserunt!
+          </span>
+        </div>
+        <div className={styles.form}>
+          <div className={styles.form__container}>
+            <div className={styles.text}>
+              <h3>Registre sua conta individual!</h3>
+              <span>
+                Por conta do nosso regulamento, alguns dados são necessários.
+              </span>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              <InputGroup
+                label="Nome completo *"
+                value={form.nome}
+                placeholder="Insira seu nome"
+                src={UsuarioIcon}
+                type="text"
+                onChange={(e) => setForm({ ...form, nome: e.target.value })}
+              />
+              <InputGroup
+                label="Usuário"
+                value={form.usuario}
+                placeholder="Insira um nome de usuário"
+                src={UsuarioIcon}
+                type="text"
+                onChange={(e) => setForm({ ...form, usuario: e.target.value })}
+              />
+              <InputGroup
+                label="E-mail *"
+                value={form.email}
+                placeholder="Insira seu e-mail"
+                src={EmailIcon}
+                type="email"
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              />
+              <InputGroup
+                label="Telefone *"
+                value={form.telefone}
+                placeholder="Insira seu telefone"
+                src={EmailIcon}
+                type="phone"
+                onChange={(e) => setForm({ ...form, telefone: e.target.value })}
+              />
+              <InputGroup
+                label="Senha *"
+                value={form.senha}
+                placeholder="Defina uma senha"
+                src={SenhaIcon}
+                type="password"
+                onChange={(e) => setForm({ ...form, senha: e.target.value })}
+              />
+              <span>
+                <input type="checkbox" />
+                Concordo com os{' '}
+                <Link>
+                  <strong>termos e condições</strong>
+                </Link>
+              </span>
+              <Button id="form" type="submit" text="Registrar" />
+            </form>
+          </div>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CadastroIndividual
+export default CadastroIndividual;

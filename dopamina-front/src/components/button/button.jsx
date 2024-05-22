@@ -1,18 +1,20 @@
 /* eslint-disable react/prop-types */
-import styles from './button.module.scss'
+import styles from './button.module.scss';
 
-const Button = ({id, type, text, onClick}) => {
-    
-    const classMap = {
-        'header': styles.secondaryButton,
-        'home': styles.tertiaryButton,
-    }
+const Button = ({ id, type, text, onClick }) => {
+  const classMap = {
+    header: styles.secondaryButton,
+    home: styles.tertiaryButton,
+    form: '',
+  };
 
-    const buttonClass = classMap[id] || styles.primaryButton
-    
-    return (
-        <button className={buttonClass} id={id} type={type} onClick={onClick}>{text}</button>    
-    )
-}
+  const buttonClass = classMap[id] || styles.primaryButton;
 
-export default Button
+  return (
+    <button className={buttonClass} id={id} type={type} onClick={onClick}>
+      {text}
+    </button>
+  );
+};
+
+export default Button;

@@ -1,63 +1,62 @@
 @use '../../styles/base.scss';
 
 @mixin baseButton {
-    width: 75px;
-    height: 30px;
+  width: 100px;
+  height: 30px;
 
-    padding: 5px;
+  padding: 5px;
 
-    font-weight: bold;
-    text-transform: uppercase;
+  font-weight: bold;
+  text-transform: uppercase;
 
-    border: 1px solid #000;
-    border-radius: 5px;
-    background-color: #ccc;
-    cursor: pointer;
+  border: 1px solid #000;
+  border-radius: 5px;
+  background-color: #ccc;
+  cursor: pointer;
 }
 
 @mixin headerButton {
-    @include baseButton;
-    background-color: orangered;
-    color: #fff;
+  @include baseButton;
+  background-color: #e85d04;
+  color: #fff;
 
-    &:hover {
-        background-color: #fff;
-        border: 1px solid orangered;
-        color: orangered;
-        transition: 2s;
-    }
+  &:hover {
+    background-color: #fff;
+    border: 1px solid #e85d04;
+    color: #e85d04;
+    transition: 2s;
+  }
 }
 
 @mixin homeButton {
+  width: 30%;
+  height: 40px;
 
-    width: 30%;
-    height: 40px;
+  border: none;
+  border-radius: 5px;
 
-    border: none;
-    border-radius: 5px;
+  background-color: #e85d04;
+  color: #fff;
 
-    background-color: orangered;
-    color: #fff;
+  font-weight: bold;
+  text-transform: uppercase;
 
-    font-weight: bold;
-    text-transform: uppercase;
-
-    &:hover {
-        background-color: #fff;
-        border: 1px solid orangered;
-        color: orangered;
-        transition: 2s;
-    }
+  &:hover {
+    background-color: #fff;
+    border: 1px solid #e85d04;
+    color: #e85d04;
+    transition: 2s;
+  }
 }
 
 .primaryButton {
-    @include baseButton;
+  @include baseButton;
 }
 
 .secondaryButton {
-    @include headerButton;
+  @include headerButton;
 }
 
 .tertiaryButton {
-    @include homeButton
+  @include homeButton;
 }
