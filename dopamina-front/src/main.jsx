@@ -6,6 +6,7 @@ import Empresas from './pages/cadastro/empresas/cadastroEmpresas';
 import Usuarios from './pages/cadastro/usuarios/cadastroUsuario.jsx';
 import Login from './pages/login/login.jsx';
 import TipoConta from './pages/cadastro/tipoDeConta/tipoConta.jsx';
+import Feed from './pages/feed/feed.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -16,6 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/cadastrousuario" element={<Usuarios />} />
         <Route path="/login" element={<Login />} />
         <Route path="/tipoconta" element={<TipoConta />} />
+        <Route path="/feed" element={<Feed />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
-// import axios from 'axios'
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
 
 import Header from '../../../components/header/header';
 import Input from '../../../components/form/input/input';
 import Button from '../../../components/button/button';
-import { cadastroEmpresa } from '../../../services/apiService';
 
 import styles from './cadastroEmpresarial.module.scss';
 
@@ -29,20 +28,12 @@ const CadastroEmpresarial = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log('Formulário enviado:', form);
+
     try {
-      const response = await cadastroEmpresa(form);
-      setForm({
-        ...form,
-        nome_fantasia: form.nome_fantasia,
-        usuario: form.usuario,
-        email: form.email,
-        telefone: form.telefone,
-        cnpj: form.cnpj,
-        senha: form.senha,
-      });
+      const response = await axios.post('http://localhost:8081/empresas', form);
       alert(response.data.message);
-      navigate('login');
-      console.log({ response });
+      navigate('/login');
     } catch (error) {
       let errorMessage =
         'Ocorreu um erro ao cadastrar usuário. Por favor, tente novamente mais tarde.';
@@ -52,22 +43,9 @@ const CadastroEmpresarial = () => {
       }
 
       alert(errorMessage);
-      console.log(`Erro ao cadastrar o usuário: ${error}`);
+      console.error('Erro ao cadastrar o usuário:', error);
     }
   };
-
-  const InputGroup = ({ label, value, placeholder, src, type, onChange }) => (
-    <div className={styles.input__group}>
-      <label>{label}</label>
-      <Input
-        value={value}
-        src={src}
-        type={type}
-        placeholder={placeholder}
-        onChange={onChange}
-      />
-    </div>
-  );
 
   return (
     <div className={styles.cadastro__empresarial}>
@@ -83,67 +61,83 @@ const CadastroEmpresarial = () => {
         <div className={styles.form}>
           <div className={styles.form__container}>
             <div className={styles.text}>
-              <h3>Registre sua conta individual!</h3>
+              <h3>Registre sua conta empresarial!</h3>
               <span>
                 Por conta do nosso regulamento, alguns dados são necessários.
               </span>
             </div>
 
             <form onSubmit={handleSubmit}>
-              <InputGroup
-                label="Nome completo *"
-                value={form.nome_fantasia}
-                placeholder="Insira seu nome"
-                src={UsuarioIcon}
-                type="text"
-                onChange={(e) =>
-                  setForm({ ...form, nome_fantasia: e.target.value })
-                }
-              />
-              <InputGroup
-                label="Usuário *"
-                value={form.usuario}
-                placeholder="Insira um nome de usuário"
-                src={UsuarioIcon}
-                type="text"
-                onChange={(e) => setForm({ ...form, usuario: e.target.value })}
-              />
-              <InputGroup
-                label="CNPJ *"
-                value={form.cnpj}
-                placeholder="Insira um nome de usuário"
-                src={UsuarioIcon}
-                type="text"
-                onChange={(e) => setForm({ ...form, cnpj: e.target.value })}
-              />
-              <InputGroup
-                label="E-mail *"
-                value={form.email}
-                placeholder="Insira seu e-mail"
-                src={EmailIcon}
-                type="email"
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-              />
-              <InputGroup
-                label="Telefone *"
-                value={form.telefone}
-                placeholder="Insira seu telefone"
-                src={EmailIcon}
-                type="phone"
-                onChange={(e) => setForm({ ...form, telefone: e.target.value })}
-              />
-              <InputGroup
-                label="Senha *"
-                value={form.senha}
-                placeholder="Defina uma senha"
-                src={SenhaIcon}
-                type="password"
-                onChange={(e) => setForm({ ...form, senha: e.target.value })}
-              />
+              <div className={styles.input__group}>
+                <label>Nome completo *</label>
+                <Input
+                  value={form.nome_fantasia}
+                  src={UsuarioIcon}
+                  type="text"
+                  placeholder="Insira seu nome"
+                  onChange={(e) =>
+                    setForm({ ...form, nome_fantasia: e.target.value })
+                  }
+                />
+              </div>
+              <div className={styles.input__group}>
+                <label>Usuário *</label>
+                <Input
+                  value={form.usuario}
+                  src={UsuarioIcon}
+                  type="text"
+                  placeholder="Insira um nome de usuário"
+                  onChange={(e) =>
+                    setForm({ ...form, usuario: e.target.value })
+                  }
+                />
+              </div>
+              <div className={styles.input__group}>
+                <label>CNPJ *</label>
+                <Input
+                  value={form.cnpj}
+                  src={UsuarioIcon}
+                  type="text"
+                  placeholder="Insira seu CNPJ"
+                  onChange={(e) => setForm({ ...form, cnpj: e.target.value })}
+                />
+              </div>
+              <div className={styles.input__group}>
+                <label>E-mail *</label>
+                <Input
+                  value={form.email}
+                  src={EmailIcon}
+                  type="email"
+                  placeholder="Insira seu e-mail"
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+              </div>
+              <div className={styles.input__group}>
+                <label>Telefone *</label>
+                <Input
+                  value={form.telefone}
+                  src={EmailIcon}
+                  type="phone"
+                  placeholder="Insira seu telefone"
+                  onChange={(e) =>
+                    setForm({ ...form, telefone: e.target.value })
+                  }
+                />
+              </div>
+              <div className={styles.input__group}>
+                <label>Senha *</label>
+                <Input
+                  value={form.senha}
+                  src={SenhaIcon}
+                  type="password"
+                  placeholder="Defina uma senha"
+                  onChange={(e) => setForm({ ...form, senha: e.target.value })}
+                />
+              </div>
               <span>
                 <input type="checkbox" />
                 Concordo com os{' '}
-                <Link>
+                <Link to="/termos-e-condicoes">
                   <strong>termos e condições</strong>
                 </Link>
               </span>
