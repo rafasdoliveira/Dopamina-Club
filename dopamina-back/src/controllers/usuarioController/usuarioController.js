@@ -53,7 +53,86 @@ const criarUsuario = async (request, response) => {
     }
 };
 
+const obterUsuario = async (request, response) => {
+    const { id } = request.params;
+
+    try {
+        const { data: usuario, error } = await supabase
+            .from('usuarios')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) {
+            throw error;
+        }
+
+        if (!usuario) {
+            return response.status(404).json({ error: 'Usuário não encontrado' });
+        }
+
+        response.status(200).json(usuario);
+    } catch (error) {
+        console.error('Erro ao obter usuário: ', error);
+        return response.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+// Função para atualizar usuário por ID
+const atualizarUsuario = async (request, response) => {
+    const { id } = request.params;
+    const { nome, usuario, email, telefone, senha } = request.body;
+
+    try {
+        const { data, error } = await supabase
+            .from('usuarios')
+            .update({ nome, usuario, email, telefone, senha })
+            .eq('id', id);
+
+        if (error) {
+            throw error;
+        }
+
+        if (data.length === 0) {
+            return response.status(404).json({ error: 'Usuário não encontrado' });
+        }
+
+        response.status(200).json({ message: 'Usuário atualizado com sucesso' });
+    } catch (error) {
+        console.error('Erro ao atualizar usuário: ', error);
+        return response.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+// Função para deletar usuário por ID
+const deletarUsuario = async (request, response) => {
+    const { id } = request.params;
+
+    try {
+        const { data, error } = await supabase
+            .from('usuarios')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            throw error;
+        }
+
+        if (data.length === 0) {
+            return response.status(404).json({ error: 'Usuário não encontrado' });
+        }
+
+        response.status(200).json({ message: 'Usuário deletado com sucesso' });
+    } catch (error) {
+        console.error('Erro ao deletar usuário: ', error);
+        return response.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
 // Exportações
 module.exports = {
-    criarUsuario
+    criarUsuario,
+    obterUsuario,
+    atualizarUsuario,
+    deletarUsuario
 };

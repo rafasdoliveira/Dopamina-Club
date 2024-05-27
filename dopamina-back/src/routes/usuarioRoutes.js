@@ -1,7 +1,26 @@
-const express = require('express')
-const router = express.Router()
-const { criarUsuario } = require('../controllers/usuarioController/usuarioController')
+const express = require('express');
+const usuarioController = require('../controllers/usuarioController/usuarioController');
 
-router.post('/criarusuario', criarUsuario)
+const router = express.Router();
 
-module.exports = router
+router.post('/', (request, response, next) => {
+    console.log('Rota /usuarios chamada');
+    usuarioController.criarUsuario(request, response).catch(next);
+});
+
+router.get('/:id', (request, response, next) => {
+    console.log('Rota GET /usuarios/:id chamada');
+    usuarioController.obterUsuario(request, response).catch(next);
+});
+
+router.put('/:id', (request, response, next) => {
+    console.log('Rota PUT /usuarios/:id chamada');
+    usuarioController.atualizarUsuario(request, response).catch(next);
+});
+
+router.delete('/:id', (request, response, next) => {
+    console.log('Rota DELETE /usuarios/:id chamada');
+    usuarioController.deletarUsuario(request, response).catch(next);
+});
+
+module.exports = router;

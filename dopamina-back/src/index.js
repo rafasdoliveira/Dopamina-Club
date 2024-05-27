@@ -3,10 +3,10 @@ const express = require('express');
 const dotenv = require('dotenv').config();
 const cors = require('cors');
 
-// Controllers
-const usuarioController = require('./controllers/usuarioController/usuarioController');
-const empresaController = require('./controllers/empresaController/empresaController');
-const authController = require('./controllers/authController/authController');
+// Importação de Roteadores
+const usuarioRoutes = require('./routes/usuarioRoutes');
+const empresaRoutes = require('./routes/empresaRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 // Configurações do aplicativo
 const app = express();
@@ -22,20 +22,12 @@ app.get('/', (request, response) => {
     response.json({ info: 'Nodejs, Express and Supabase API' });
 });
 
-app.post('/usuarios', (request, response, next) => {
-    console.log('Rota /usuarios chamada');
-    usuarioController.criarUsuario(request, response).catch(next);
-});
+// Monta o roteador de usuários no caminho base /usuarios
+app.use('/usuarios', usuarioRoutes);
 
-app.post('/empresas', (request, response, next) => {
-    console.log('Rota /empresas chamada');
-    empresaController.criarEmpresa(request, response).catch(next);
-});
-
-app.post('/login', (request, response, next) => {
-    console.log('Rota /login chamada');
-    authController.login(request, response).catch(next);
-});
+// Monta os outros roteadores
+app.use('/empresas', empresaRoutes);
+app.use('/login', authRoutes);
 
 app.get('/home', (request, response) => {
     response.sendFile('index.html', { root: __dirname });

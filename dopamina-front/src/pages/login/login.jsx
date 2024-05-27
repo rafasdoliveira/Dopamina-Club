@@ -24,8 +24,8 @@ const Login = () => {
 
     try {
       const response = await axios.post('http://localhost:8081/login', login);
+      console.log(response);
       alert(response.data.message);
-      setLogin({ email: '', senha: '' });
       navigate('/feed');
     } catch (error) {
       let errorMessage =

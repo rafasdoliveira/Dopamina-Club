@@ -1,4 +1,17 @@
 const supabase = require('../../db/db');
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv').config()
+const SECRET = process.env.SECRET_TOKEN
+
+function verifyJWT(request, response, next) {
+    const token = request.headers['authorization']
+    jwt.verify(token, SECRET, (error, decoded) => {
+        if(error) return response.status(401).end()
+        
+        request.userId = decoded.userId
+        next
+    })
+}
 
 // Função de login
 const login = async (request, response) => {
@@ -29,9 +42,11 @@ const login = async (request, response) => {
 
         // Verificação de credenciais
         if (usuario && usuario.senha === senha) {
-            return response.status(200).json({ message: 'Login realizado com sucesso' });
+            const token = jwt.sign({userId: usuario.id}, SECRET, {expiresIn: '1d' })
+            return response.status(200).json({ message: 'Login realizado com sucesso', auth: true, token: token });
         } else if (empresa && empresa.senha === senha) {
-            return response.status(200).json({ message: 'Login realizado com sucesso' });
+            const token = jwt.sign({userId: empresa.id}, SECRET, {expiresIn: '1d' })
+            return response.status(200).json({ message: 'Login realizado com sucesso', auth: true, token: token });
         } else {
             return response.status(401).json({ error: 'Credenciais inválidas' });
         }
