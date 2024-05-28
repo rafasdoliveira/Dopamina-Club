@@ -22,12 +22,12 @@ app.get('/', (request, response) => {
     response.json({ info: 'Nodejs, Express and Supabase API' });
 });
 
+// Monta o roteador de autenticação no caminho base /login
+app.use('/login', authRoutes);
 // Monta o roteador de usuários no caminho base /usuarios
 app.use('/usuarios', usuarioRoutes);
-
-// Monta os outros roteadores
+// Monta o roteador de empresas no caminho base /empresas
 app.use('/empresas', empresaRoutes);
-app.use('/login', authRoutes);
 
 app.get('/home', (request, response) => {
     response.sendFile('index.html', { root: __dirname });

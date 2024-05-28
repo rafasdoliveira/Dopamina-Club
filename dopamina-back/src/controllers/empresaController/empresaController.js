@@ -74,8 +74,82 @@ const criarEmpresa = async (request, response) => {
     }
 };
 
+const obterEmpresa = async (request, response) => {
+    const { id } = request.params
+
+    try {
+        const { data: empresa, error } = await supabase
+        .from('empresas')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+        if(error) {
+            throw error
+        }
+
+        if(!empresa) {
+            return response.status(400).json({error: 'Empresa não encontrada'})
+        }
+
+        response.status(200).json(usuario)
+    } catch (error) {
+        console.error('Erro ao obter empresa: ', error)
+        return response.status(500).json({error: 'Internal Server Error'})
+    }
+}
+
+const atualizarEmpresa = async (request, response) => {
+    const { id } = request.params
+    const { nome_fantasia, usuario, email, telefone, cnpj, senha } = request.body;
+
+    try {
+        const { data, error } = await supabase
+        .from('empresas')
+        .update({ nome_fantasia, usuario, email, telefone, cnpj, senha })
+        .eq('id', id)
+
+        if(error) {
+            throw error
+        }
+
+        if (data.length === 0) {
+            return response.status(404).json({ error: 'Empresa não encontrada' })
+        }
+
+        response.status(200).json({ message: 'Empresa atualizada com sucesso' })
+    } catch (error) {
+        console.error( 'Erro ao atualizar empresa:', error)
+        return response.status(500).json({ error: 'Internal Server Error' })
+    }
+}
+
+const deletarEmpresa = async (request, response) => {
+    const { id } = request.params
+
+    try {
+        const { data, error } = await supabase
+        .from('empresas')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        throw error;
+    }
+
+    if (data.length === 0) {
+        return response.status(404).json({ error: 'Empresa não encontrado' });
+    }
+    } catch (error) {
+        console.error('Erro ao deletar empresa', error)
+        return response.status(500).json({error: 'Internal Server Error'})
+    }
+}
 
 // Exportações
 module.exports = {
-    criarEmpresa
+    criarEmpresa,
+    obterEmpresa,
+    atualizarEmpresa, 
+    deletarEmpresa
 };
