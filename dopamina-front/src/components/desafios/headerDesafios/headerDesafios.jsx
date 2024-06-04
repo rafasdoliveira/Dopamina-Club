@@ -3,7 +3,6 @@ import { useState } from 'react';
 import styles from './headerDesafios.module.scss';
 import Button from '../../button/button';
 import Modal from '../modalCriarDesafio/modalCriarDesafio';
-Modal;
 
 const HeaderDesafios = ({ title }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,21 +16,22 @@ const HeaderDesafios = ({ title }) => {
     setIsModalOpen(false);
   };
 
-  <Modal isOpen={isModalOpen} onClose={handleCloseModal} />;
-
   return (
-    <header className={styles.headerDesafio}>
-      <div className={styles.title}>
-        <h1>{title}</h1>
-      </div>
-      <div className={styles.headerButton}>
-        <Button
-          onClick={handleCriarDesafio}
-          id="atividade"
-          text="Criar Desafio"
-        />
-      </div>
-    </header>
+    <>
+      <header className={styles.headerDesafio}>
+        <div className={styles.title}>
+          <h1>{title}</h1>
+        </div>
+        <div className={styles.headerButton}>
+          <Button
+            onClick={handleCriarDesafio}
+            id="atividade"
+            text="Criar Desafio"
+          />
+        </div>
+      </header>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} />
+    </>
   );
 };
 
