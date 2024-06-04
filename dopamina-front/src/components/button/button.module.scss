@@ -40,13 +40,7 @@
 
   font-weight: bold;
   text-transform: uppercase;
-
-  &:hover {
-    background-color: #fff;
-    border: 1px solid #e85d04;
-    color: #e85d04;
-    transition: 2s;
-  }
+  cursor: pointer;
 }
 
 .primaryButton {
@@ -65,4 +59,5 @@
   @include homeButton;
   width: 170px;
   font-weight: 500;
+  
 }
