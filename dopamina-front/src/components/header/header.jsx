@@ -32,7 +32,7 @@ const Header = () => {
         </ul>
       </nav>
       <nav className={styles.navButtons}>
-        <Button id="header" text="Já sou DC" onClick={handleNavigate} />
+        <Button id="header" text="Login" onClick={handleNavigate} />
       </nav>
     </header>
   );

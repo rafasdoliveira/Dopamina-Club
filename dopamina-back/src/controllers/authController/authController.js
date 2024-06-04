@@ -1,7 +1,5 @@
 const supabase = require('../../db/db');
 const jwt = require('jsonwebtoken')
-const dotenv = require('dotenv').config()
-const SECRET = process.env.SECRET_TOKEN
 
 function verifyJWT(request, response, next) {
     const token = request.headers['authorization']

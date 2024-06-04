@@ -7,6 +7,7 @@ const cors = require('cors');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 const empresaRoutes = require('./routes/empresaRoutes');
 const authRoutes = require('./routes/authRoutes');
+const desafioRoutes = require('./routes/desafioRoutes'); 
 
 // Configurações do aplicativo
 const app = express();
@@ -22,12 +23,10 @@ app.get('/', (request, response) => {
     response.json({ info: 'Nodejs, Express and Supabase API' });
 });
 
-// Monta o roteador de autenticação no caminho base /login
 app.use('/login', authRoutes);
-// Monta o roteador de usuários no caminho base /usuarios
 app.use('/usuarios', usuarioRoutes);
-// Monta o roteador de empresas no caminho base /empresas
 app.use('/empresas', empresaRoutes);
+app.use('/desafios', desafioRoutes); 
 
 app.get('/home', (request, response) => {
     response.sendFile('index.html', { root: __dirname });

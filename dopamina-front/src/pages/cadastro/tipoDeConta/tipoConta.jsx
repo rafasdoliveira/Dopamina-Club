@@ -6,28 +6,13 @@ import Header from '../../../components/header/header';
 import styles from './tipoConta.module.scss';
 import User from '../../../assets/icons/userPoly.svg';
 import Business from '../../../assets/icons/businessPoly.svg';
+import AccountType from '../../../components/accountTypeButton/accountType';
 
 const TipoConta = () => {
   const navigate = useNavigate();
 
   const handleNavigate = (path) => {
     navigate(path);
-  };
-
-  const AccountTypeButton = ({ imgSrc, title, description, onClick }) => {
-    return (
-      <button className={styles.accountDescription} onClick={onClick}>
-        <div>
-          <span>
-            <img src={imgSrc} alt="" />
-          </span>
-        </div>
-        <div>
-          <h4>{title}</h4>
-          <span>{description}</span>
-        </div>
-      </button>
-    );
   };
 
   return (
@@ -51,13 +36,13 @@ const TipoConta = () => {
               </span>
             </div>
             <div className={styles.accountType}>
-              <AccountTypeButton
+              <AccountType
                 imgSrc={User}
                 title="Individual"
                 description="Conta pessoal para criar e participar de desafios."
                 onClick={() => handleNavigate('/cadastrousuario')}
               />
-              <AccountTypeButton
+              <AccountType
                 imgSrc={Business}
                 title="Empresarial"
                 description="Crie desafios dinâmicos e personalizados para sua empresa."

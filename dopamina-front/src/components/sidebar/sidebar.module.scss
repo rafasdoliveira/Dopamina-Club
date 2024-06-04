@@ -1,0 +1,21 @@
+.nav {
+    border: 1px solid #ccc;
+    width: 260px;
+    height: 100vh;
+
+    ul {
+        li {
+            display: flex;
+            border: 1px solid #ccc;
+            width: 100%;
+            span {
+                margin: 10px 0px 10px 25px;
+            }
+
+            &:hover {
+                transition: 1s;
+                background-color: #e85d04;
+            }
+        }
+    }
+}

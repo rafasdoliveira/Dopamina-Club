@@ -6,6 +6,7 @@ const Button = ({ id, type, text, onClick }) => {
     header: styles.secondaryButton,
     home: styles.tertiaryButton,
     form: '',
+    atividade: styles.atividadeButton,
   };
 
   const buttonClass = classMap[id] || styles.primaryButton;

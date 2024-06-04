@@ -8,10 +8,8 @@ import Input from '../../../components/form/input/input';
 import Button from '../../../components/button/button';
 
 import styles from './cadastroEmpresarial.module.scss';
-
-import EmailIcon from '../../../assets/icons/envelope-solid.svg';
-import SenhaIcon from '../../../assets/icons/lock-solid.svg';
-import UsuarioIcon from '../../../assets/icons/user-solid-2.svg';
+import { FaPhoneAlt, FaUser } from 'react-icons/fa';
+import { MdBusiness, MdEmail, MdPassword } from 'react-icons/md';
 
 const CadastroEmpresarial = () => {
   const navigate = useNavigate();
@@ -72,7 +70,7 @@ const CadastroEmpresarial = () => {
                 <label>Nome completo *</label>
                 <Input
                   value={form.nome_fantasia}
-                  src={UsuarioIcon}
+                  icon={<FaUser />}
                   type="text"
                   placeholder="Insira seu nome"
                   onChange={(e) =>
@@ -84,7 +82,7 @@ const CadastroEmpresarial = () => {
                 <label>Usuário *</label>
                 <Input
                   value={form.usuario}
-                  src={UsuarioIcon}
+                  icon={<FaUser />}
                   type="text"
                   placeholder="Insira um nome de usuário"
                   onChange={(e) =>
@@ -96,7 +94,7 @@ const CadastroEmpresarial = () => {
                 <label>CNPJ *</label>
                 <Input
                   value={form.cnpj}
-                  src={UsuarioIcon}
+                  icon={<MdBusiness />}
                   type="text"
                   placeholder="Insira seu CNPJ"
                   onChange={(e) => setForm({ ...form, cnpj: e.target.value })}
@@ -106,7 +104,7 @@ const CadastroEmpresarial = () => {
                 <label>E-mail *</label>
                 <Input
                   value={form.email}
-                  src={EmailIcon}
+                  icon={<MdEmail />}
                   type="email"
                   placeholder="Insira seu e-mail"
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -116,7 +114,7 @@ const CadastroEmpresarial = () => {
                 <label>Telefone *</label>
                 <Input
                   value={form.telefone}
-                  src={EmailIcon}
+                  icon={<FaPhoneAlt />}
                   type="phone"
                   placeholder="Insira seu telefone"
                   onChange={(e) =>
@@ -128,7 +126,7 @@ const CadastroEmpresarial = () => {
                 <label>Senha *</label>
                 <Input
                   value={form.senha}
-                  src={SenhaIcon}
+                  icon={<MdPassword />}
                   type="password"
                   placeholder="Defina uma senha"
                   onChange={(e) => setForm({ ...form, senha: e.target.value })}

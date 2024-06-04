@@ -8,8 +8,7 @@ import Input from '../../components/form/input/input';
 import Header from '../../components/header/header';
 
 import styles from './login.module.scss';
-import EmailIcon from '../../assets/icons/envelope-solid.svg';
-import SenhaIcon from '../../assets/icons/lock-solid.svg';
+import { MdEmail, MdPassword } from 'react-icons/md';
 
 const Login = () => {
   const [login, setLogin] = useState({
@@ -25,8 +24,9 @@ const Login = () => {
     try {
       const response = await axios.post('http://localhost:8081/login', login);
       console.log(response);
-      alert(response.data.message);
-      navigate('/feed');
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1000);
     } catch (error) {
       let errorMessage =
         'Ocorreu um erro ao realizar o login. Por favor, tente novamente mais tarde.';
@@ -53,7 +53,7 @@ const Login = () => {
               <label>E-mail</label>
               <Input
                 value={login.email}
-                src={EmailIcon}
+                icon={<MdEmail />}
                 type="text"
                 placeholder="Insira seu e-mail"
                 onChange={(e) => setLogin({ ...login, email: e.target.value })}
@@ -63,7 +63,7 @@ const Login = () => {
               <label>Senha</label>
               <Input
                 value={login.senha}
-                src={SenhaIcon}
+                icon={<MdPassword />}
                 type="password"
                 placeholder="Insira sua senha"
                 onChange={(e) => setLogin({ ...login, senha: e.target.value })}

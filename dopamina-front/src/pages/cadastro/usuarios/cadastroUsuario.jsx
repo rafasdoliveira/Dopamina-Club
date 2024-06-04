@@ -7,12 +7,9 @@ import Button from '../../../components/button/button';
 import Input from '../../../components/form/input/input';
 import Header from '../../../components/header/header';
 
-import 'react-international-phone/style.css';
 import styles from './cadastroIndividual.module.scss';
-
-import EmailIcon from '../../../assets/icons/envelope-solid.svg';
-import SenhaIcon from '../../../assets/icons/lock-solid.svg';
-import UsuarioIcon from '../../../assets/icons/user-solid-2.svg';
+import { FaPhoneAlt, FaUser } from 'react-icons/fa';
+import { MdEmail, MdPassword } from 'react-icons/md';
 
 const CadastroIndividual = () => {
   const navigate = useNavigate();
@@ -72,7 +69,7 @@ const CadastroIndividual = () => {
                 <label>Nome completo *</label>
                 <Input
                   value={form.nome}
-                  src={UsuarioIcon}
+                  icon={<FaUser />}
                   type="text"
                   placeholder="Insira seu nome"
                   onChange={(e) => setForm({ ...form, nome: e.target.value })}
@@ -82,7 +79,7 @@ const CadastroIndividual = () => {
                 <label>Usuário</label>
                 <Input
                   value={form.usuario}
-                  src={UsuarioIcon}
+                  icon={<FaUser />}
                   type="text"
                   placeholder="Insira um nome de usuário"
                   onChange={(e) =>
@@ -94,7 +91,7 @@ const CadastroIndividual = () => {
                 <label>E-mail *</label>
                 <Input
                   value={form.email}
-                  src={EmailIcon}
+                  icon={<MdEmail />}
                   type="email"
                   placeholder="Insira seu e-mail"
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -104,7 +101,7 @@ const CadastroIndividual = () => {
                 <label>Telefone *</label>
                 <Input
                   value={form.telefone}
-                  src={EmailIcon}
+                  icon={<FaPhoneAlt />}
                   type="phone"
                   placeholder="Insira seu telefone"
                   onChange={(e) =>
@@ -116,7 +113,7 @@ const CadastroIndividual = () => {
                 <label>Senha *</label>
                 <Input
                   value={form.senha}
-                  src={SenhaIcon}
+                  icon={<MdPassword />}
                   type="password"
                   placeholder="Defina uma senha"
                   onChange={(e) => setForm({ ...form, senha: e.target.value })}

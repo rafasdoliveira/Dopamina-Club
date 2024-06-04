@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
-import styles from './input.module.scss';
+import styles from './textarea.module.scss';
 
-const Input = ({
+const Textarea = ({
   icon,
-  type,
   id,
   placeholder,
   value,
@@ -17,18 +16,17 @@ const Input = ({
     atividade: styles.quarternaryInput,
   };
 
-  const inputClass = classMap[id] || styles.primaryInput;
+  const textareaClass = classMap[id] || styles.primaryInput;
 
   return (
-    <div className={inputClass}>
+    <div className={textareaClass}>
       {icon && <span className={styles.icon}>{icon}</span>}
-      <input
-        type={type}
+      <textarea
         name={id}
         id={id}
         placeholder={placeholder}
         value={value}
-        required={required ? true : false}
+        required={required}
         onChange={onChange}
         disabled={disabled}
       />
@@ -36,4 +34,4 @@ const Input = ({
   );
 };
 
-export default Input;
+export default Textarea;

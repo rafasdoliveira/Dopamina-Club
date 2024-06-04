@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .main {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .content {
+    flex-grow: 1; 
+    padding: 16px;
+  }
+  
