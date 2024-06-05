@@ -1,22 +1,12 @@
 const supabase = require('../../db/db');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const secret = process.env.SECRET_TOKEN;
 
-function verifyJWT(request, response, next) {
-    const token = request.headers['authorization']
-    jwt.verify(token, SECRET, (error, decoded) => {
-        if(error) return response.status(401).end()
-        
-        request.userId = decoded.userId
-        next
-    })
-}
-
-// Função de login
 const login = async (request, response) => {
     const { email, senha } = request.body;
     const campos = { email, senha };
 
-    // Validação de campos
     for (const campo in campos) {
         if (!campos[campo]) {
             return response.status(400).json({ error: `Por favor, preencha o campo ${campo}` });
@@ -38,19 +28,29 @@ const login = async (request, response) => {
             .eq('email', email)
             .single();
 
-        // Verificação de credenciais
-        if (usuario && usuario.senha === senha) {
-            const token = jwt.sign({userId: usuario.id}, SECRET, {expiresIn: '1d' })
-            return response.status(200).json({ message: 'Login realizado com sucesso', auth: true, token: token });
-        } else if (empresa && empresa.senha === senha) {
-            const token = jwt.sign({userId: empresa.id}, SECRET, {expiresIn: '1d' })
-            return response.status(200).json({ message: 'Login realizado com sucesso', auth: true, token: token });
+        // Verifica se o e-mail existe
+        if (usuario) {
+            // Verifica a senha
+            if (bcrypt.compareSync(senha, usuario.senha)) {
+                const token = jwt.sign({ userId: usuario.id, tipo: 'usuario' }, secret, { expiresIn: '1d' });
+                return response.status(200).json({ message: 'Login realizado com sucesso', auth: true, token });
+            } else {
+                return response.status(401).json({ error: 'Senha incorreta' });
+            }
+        } else if (empresa) {
+            // Verifica a senha
+            if (bcrypt.compareSync(senha, empresa.senha)) {
+                const token = jwt.sign({ userId: empresa.id, tipo: 'empresa' }, secret, { expiresIn: '1d' });
+                return response.status(200).json({ message: 'Login realizado com sucesso', auth: true, token });
+            } else {
+                return response.status(401).json({ error: 'Senha incorreta' });
+            }
         } else {
-            return response.status(401).json({ error: 'Credenciais inválidas' });
+            return response.status(404).json({ error: 'E-mail não encontrado' });
         }
     } catch (error) {
         console.error('Erro ao fazer login: ', error);
-        return response.status(500).json({ error: 'Internal Server Error' });
+        return response.status(500).json({ error: 'Erro interno do servidor' });
     }
 };
 

@@ -18,6 +18,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Middleware de tratamento de erros
+app.use((err, req, res, next) => {
+    console.error('Erro detectado:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+});
+
 // Rotas
 app.get('/', (request, response) => {
     response.json({ info: 'Nodejs, Express and Supabase API' });
@@ -32,11 +38,6 @@ app.get('/home', (request, response) => {
     response.sendFile('index.html', { root: __dirname });
 });
 
-// Middleware de tratamento de erros
-app.use((err, req, res, next) => {
-    console.error('Erro detectado:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
-});
 
 // Inicialização do servidor
 app.listen(PORT, () => {
