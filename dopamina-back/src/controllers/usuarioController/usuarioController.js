@@ -49,14 +49,32 @@ const criarUsuario = async (request, response) => {
     }
 };
 
-const obterUsuario = async (request, response) => {
-    const userId = request.user.userId; 
+const listarUsuarios = async (request, response) => {
+    try {
+        const { data: usuarios, error } = await supabase
+            .from('usuarios')
+            .select('*');
+
+        if (error) {
+            throw error;
+        }
+
+        response.status(200).json(usuarios);
+    } catch (error) {
+        console.error('Erro ao listar usuários: ', error);
+        response.status(500).json({ error: 'Erro interno do servidor' });
+    }
+};
+
+const obterUsuarioPorId = async (request, response) => {
+    const userId = request.user.userId;
+    console.log(userId)
 
     try {
         const { data: usuario, error } = await supabase
             .from('usuarios')
             .select('*')
-            .eq('id', userId)
+            .eq('id', userId) 
             .single();
 
         if (error) {
@@ -69,18 +87,16 @@ const obterUsuario = async (request, response) => {
 
         response.status(200).json(usuario);
     } catch (error) {
-        console.error('Erro ao obter dados do usuário: ', error);
+        console.error('Erro ao obter usuário por ID: ', error);
         response.status(500).json({ error: 'Erro interno do servidor' });
     }
 };
 
 const atualizarUsuario = async (request, response) => {
     const userId = request.user.userId; 
-    console.log('user do token', userId)
+    console.log('Tipo de userId:', typeof userId); 
+    console.log('Valor de userId:', userId); 
 
-    const { id } = request.params;
-    console.log('user do banco', id)
-    
     const { nome, usuario, email, telefone, senha } = request.body;
     
     const atualizacoes = { nome, usuario, email, telefone };
@@ -90,21 +106,24 @@ const atualizarUsuario = async (request, response) => {
     }
 
     try {
-        if (userId !== id) {
-            return response.status(403).json({ error: 'Você não tem permissão para atualizar este usuário' });
+        const { data: existingUser, error: checkError } = await supabase
+            .from('usuarios')
+            .select('id')
+            .eq('id', userId)
+            .single(); 
+
+        if (checkError || !existingUser) {
+            console.error('Usuário não encontrado:', checkError);
+            return response.status(404).json({ error: 'Usuário não encontrado' });
         }
 
         const { data, error } = await supabase
             .from('usuarios')
             .update(atualizacoes)
-            .eq('id', id);
+            .eq('id', userId);
 
         if (error) {
             throw error;
-        }
-
-        if (!data || data.length === 0) {
-            return response.status(404).json({ error: 'Usuário não encontrado' });
         }
 
         response.status(200).json({ message: 'Usuário atualizado com sucesso' });
@@ -115,29 +134,15 @@ const atualizarUsuario = async (request, response) => {
 };
 
 const deletarUsuario = async (request, response) => {
-    const userId = request.user.userId; 
-    console.log('idtoken', userId )
-    
-    const { id } = request.params;
-    console.log('idbanco', id )
+    const userId = request.user.userId;
+    console.log('idtoken', userId);
 
     try {
-        if (userId !== id) {
-            return response.status(403).json({ error: 'Você não tem permissão para excluir este usuário' });
-        }
-
         const { data, error } = await supabase
             .from('usuarios')
             .delete()
-            .eq('id', id);
-
-        if (error) {
-            throw error;
-        }
-
-        if (data.length === 0) {
-            return response.status(404).json({ error: 'Usuário não encontrado' });
-        }
+            .eq('id', userId)
+            .single(); 
 
         response.status(200).json({ message: 'Usuário deletado com sucesso' });
     } catch (error) {
@@ -148,7 +153,8 @@ const deletarUsuario = async (request, response) => {
 
 module.exports = {
     criarUsuario,
-    obterUsuario,
+    listarUsuarios,
+    obterUsuarioPorId,
     atualizarUsuario,
     deletarUsuario
 };
