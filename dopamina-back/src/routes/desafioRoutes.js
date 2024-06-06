@@ -1,26 +1,37 @@
 const express = require('express');
 const desafioController = require('../controllers/desafioController/desafioController');
+const { authMiddleware } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-router.post('/', (request, response, next) => {
-    console.log('Rota /desafios chamada');
-    desafioController.criarDesafio(request, response).catch(next);
+router.post('/', authMiddleware, async (request, response) => {
+    console.log('Rota POST /desafios chamada');
+    await desafioController.criarDesafio(request, response);
 });
 
-router.get('/:id', (request, response, next) => {
+router.post('/entrar', async (request, response) => {
+    console.log('Rota POST /desafios/entrar chamada');
+    await desafioController.entrarNoDesafio(request, response);
+});
+
+router.get('/:id', async (request, response) => {
     console.log('Rota GET /desafios/:id chamada');
-    desafioController.obterDesafio(request, response).catch(next);
+    await desafioController.obterDesafio(request, response);
 });
 
-router.put('/:id', (request, response, next) => {
+router.get('/', async (request, response) => {
+    console.log('Rota GET /desafios/ chamada');
+    await desafioController.obterTodosDesafios(request, response);
+});
+
+router.put('/:id(\\d+)', async (request, response) => {
     console.log('Rota PUT /desafios/:id chamada');
-    desafioController.atualizarDesafio(request, response).catch(next);
+    await desafioController.atualizarDesafio(request, response);
 });
 
-router.delete('/:id', (request, response, next) => {
+router.delete('/:id(\\d+)', async (request, response) => {
     console.log('Rota DELETE /desafios/:id chamada');
-    desafioController.deletarDesafio(request, response).catch(next);
+    await desafioController.deletarDesafio(request, response);
 });
 
 module.exports = router;

@@ -1,26 +1,27 @@
 const express = require('express');
-const atividadeController = require('../controllers/atividadeController/atividadeController')
+const atividadeController = require('../controllers/atividadeController/atividadeController');
+const { authMiddleware } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-router.post('/', (request, response, next) => {
-    console.log('Rota /atividades chamada');
-    atividadeController.criarAtividade(request, response).catch(next);
+router.post('/', authMiddleware, async (request, response) => {
+    console.log('Rota POST /atividades chamada');
+    await atividadeController.criarAtividade(request, response);
 });
 
-router.get('/:id', (request, response, next) => {
+router.get('/:id', async (request, response) => {
     console.log('Rota GET /atividades/:id chamada');
-    atividadeController.obterAtividade(request, response).catch(next);
+    await atividadeController.obterAtividade(request, response);
 });
 
-router.put('/:id', (request, response, next) => {
+router.put('/:id', async (request, response) => {
     console.log('Rota PUT /atividades/:id chamada');
-    atividadeController.atualizarAtividade(request, response).catch(next);
+    await atividadeController.atualizarAtividade(request, response);
 });
 
-router.delete('/:id', (request, response, next) => {
+router.delete('/:id', async (request, response) => {
     console.log('Rota DELETE /atividades/:id chamada');
-    atividadeController.deletarAtividade(request, response).catch(next);
+    await atividadeController.deletarAtividade(request, response);
 });
 
 module.exports = router;

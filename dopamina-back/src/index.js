@@ -7,7 +7,9 @@ const cors = require('cors');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 const empresaRoutes = require('./routes/empresaRoutes');
 const authRoutes = require('./routes/authRoutes');
-const desafioRoutes = require('./routes/desafioRoutes'); 
+const desafioRoutes = require('./routes/desafioRoutes');
+// const atividadeRoutes = require('./routes/atividadeRoutes'); 
+const atividadeRoutes = require('./routes/atividadeRoutes')
 
 // Configurações do aplicativo
 const app = express();
@@ -32,7 +34,8 @@ app.get('/', (request, response) => {
 app.use('/login', authRoutes);
 app.use('/usuarios', usuarioRoutes);
 app.use('/empresas', empresaRoutes);
-app.use('/desafios', desafioRoutes); 
+app.use('/desafios', desafioRoutes);
+app.use('/atividades', atividadeRoutes); 
 
 app.get('/home', (request, response) => {
     response.sendFile('index.html', { root: __dirname });
