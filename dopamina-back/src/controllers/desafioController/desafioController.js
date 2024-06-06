@@ -134,9 +134,8 @@ const atualizarDesafio = async (request, response) => {
     // Lógica para atualizar um desafio existente
 };
 
-
 const deletarDesafio = async (request, response) => {
-    const { desafio_id } = request.params;
+    const desafio_id  = request.params.id;
     const token = request.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decodedToken.userId;
@@ -147,7 +146,10 @@ const deletarDesafio = async (request, response) => {
             .select('*')
             .eq('id', desafio_id)
             .eq('criado_por', userId)
-            .single();
+            // .single();
+
+        console.log({desafio_id})
+        console.log({buscaError})
 
         if (buscaError) {
             console.error('Erro ao buscar desafio: ', buscaError);

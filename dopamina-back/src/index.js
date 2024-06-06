@@ -8,6 +8,7 @@ const usuarioRoutes = require('./routes/usuarioRoutes');
 const empresaRoutes = require('./routes/empresaRoutes');
 const authRoutes = require('./routes/authRoutes');
 const desafioRoutes = require('./routes/desafioRoutes');
+const comentarioRoutes = require('./routes/comentarioRoutes')
 // const atividadeRoutes = require('./routes/atividadeRoutes'); 
 const atividadeRoutes = require('./routes/atividadeRoutes')
 
@@ -36,6 +37,7 @@ app.use('/usuarios', usuarioRoutes);
 app.use('/empresas', empresaRoutes);
 app.use('/desafios', desafioRoutes);
 app.use('/atividades', atividadeRoutes); 
+app.use('/comentarios', comentarioRoutes)
 
 app.get('/home', (request, response) => {
     response.sendFile('index.html', { root: __dirname });

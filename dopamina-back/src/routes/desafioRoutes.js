@@ -29,7 +29,7 @@ router.put('/:id(\\d+)', async (request, response) => {
     await desafioController.atualizarDesafio(request, response);
 });
 
-router.delete('/:id(\\d+)', async (request, response) => {
+router.delete('/:id', async (request, response) => {
     console.log('Rota DELETE /desafios/:id chamada');
     await desafioController.deletarDesafio(request, response);
 });
