@@ -5,7 +5,6 @@ const criarDesafio = async (request, response) => {
     const { titulo, data_inicial, data_final, descricao } = request.body;
     const campos = { titulo, data_inicial, data_final, descricao };
 
-    // Obtém o ID do usuário a partir do token de autenticação
     const token = request.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decodedToken.userId;
@@ -17,7 +16,6 @@ const criarDesafio = async (request, response) => {
     }
 
     try {
-        // Insere o desafio no banco de dados
         const { data: desafio, error: insiraError } = await supabase
             .from('desafios')
             .insert([{ titulo, data_inicial, data_final, descricao, criado_por: userId }]);
@@ -34,48 +32,7 @@ const criarDesafio = async (request, response) => {
     }
 };
 
-const entrarNoDesafio = async (request, response) => {
-    const { desafio_id } = request.body;
-    const token = request.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
-    const userId = decodedToken.userId;
-
-    try {
-        // Verifica se o usuário já está participando do desafio
-        const { data: participanteExistente, error: verificaParticipanteError } = await supabase
-            .from('participantes_desafios')
-            .select('*')
-            .eq('desafio_id', desafio_id)
-            .eq('usuario_id', userId);
-
-        if (verificaParticipanteError) {
-            console.error('Erro ao verificar participante: ', verificaParticipanteError);
-            return response.status(500).json({ error: 'Erro interno do servidor' });
-        }
-
-        if (participanteExistente.length > 0) {
-            return response.status(409).json({ error: 'Usuário já está participando deste desafio' });
-        }
-
-        // Insere o usuário como participante
-        const { data: novoParticipante, error: insereParticipanteError } = await supabase
-            .from('participantes_desafios')
-            .insert([{ desafio_id, usuario_id: userId }]);
-
-        if (insereParticipanteError) {
-            console.error('Erro ao adicionar participante: ', insereParticipanteError);
-            return response.status(500).json({ error: 'Erro interno do servidor' });
-        }
-
-        response.status(201).json({ message: 'Usuário entrou no desafio com sucesso' });
-    } catch (error) {
-        console.error('Erro ao entrar no desafio: ', error);
-        return response.status(500).json({ error: 'Erro interno do servidor' });
-    }
-};
-
 const obterDesafio = async (request, response) => {
-    console.log('chamou obter desafio')
     const token = request.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decodedToken.userId;
@@ -130,12 +87,100 @@ const obterTodosDesafios = async (request, response) => {
     }
 };
 
-const atualizarDesafio = async (request, response) => {
-    // Lógica para atualizar um desafio existente
+const obterDesafiosAtividadesComentarios = async (request, response) => {
+    console.log('chamou')
+    const id = request.params.id
+    console.log(id)
+
+    try {
+        const { data: desafios, error: desafioError } = await supabase
+            .from('desafios')
+            .select(`
+            *,
+            atividades (
+                id, 
+                titulo,
+                descricao,
+                data,
+                comentarios (
+                    id,
+                    conteudo,
+                    data,
+                    usuario_id,
+                    atividade_id,
+                    usuarios (
+                        id,
+                        nome,
+                        email
+                    )
+                )
+            )
+        `)
+        .eq('id', id);
+
+        if (desafioError) {
+            console.error('Erro ao obter desafios: ', desafioError);
+            return response.status(500).json({ error: 'Erro interno do servidor' });
+        }
+
+        const desafiosEnumerados = desafios.map((desafio, index) => ({
+            index: index + 1,
+            ...desafio
+        }));
+
+        response.status(200).json({ desafiosEnumerados });
+    } catch (error) {
+        console.error('Erro ao obter desafios: ', error);
+        return response.status(500).json({ error: 'Erro interno do servidor' });
+    }
 };
 
-const deletarDesafio = async (request, response) => {
+const atualizarDesafio = async (request, response) => {
     const desafio_id  = request.params.id;
+    const token = request.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+    const userId = decodedToken.userId;
+
+    const { titulo, data_inicial, data_final, descricao } = request.body;
+    const atualizacoes = { titulo, data_inicial, data_final, descricao }
+
+    try {
+        const { data: existingDesafio, error: checkError } = await supabase
+            .from('desafios')
+            .select('id, criado_por')
+            .eq('id', desafio_id)
+            .single()
+
+        if (checkError || !existingDesafio) {
+            console.error('Desafio não encontrado:', checkError);
+            return response.status(404).json({ error: 'Desafio não encontrado' });
+        }
+
+        if (existingDesafio.criado_por !== userId) {
+            return response.status(403).json({ error: "Você não tem permissão para editar este desafio." })
+        }
+
+        const { data, error } = await supabase
+            .from('desafios')
+            .update(atualizacoes)
+            .eq('id', desafio_id);
+
+            if(error) {
+                throw error
+            }
+
+            response.status(200).json({ message: 'Desafio atualizado com sucesso' })
+
+    } catch (error) {
+        console.error('')
+    }
+};
+
+
+
+
+const deletarDesafio = async (request, response) => {
+    const desafio_id = request.params.id;
     const token = request.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decodedToken.userId;
@@ -147,9 +192,6 @@ const deletarDesafio = async (request, response) => {
             .eq('id', desafio_id)
             .eq('criado_por', userId)
             // .single();
-
-        console.log({desafio_id})
-        console.log({buscaError})
 
         if (buscaError) {
             console.error('Erro ao buscar desafio: ', buscaError);
@@ -179,9 +221,9 @@ const deletarDesafio = async (request, response) => {
 
 module.exports = {
     criarDesafio,
-    entrarNoDesafio,
     obterDesafio,
     obterTodosDesafios,
+    obterDesafiosAtividadesComentarios,
     atualizarDesafio,
     deletarDesafio
 };

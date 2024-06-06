@@ -9,8 +9,8 @@ const empresaRoutes = require('./routes/empresaRoutes');
 const authRoutes = require('./routes/authRoutes');
 const desafioRoutes = require('./routes/desafioRoutes');
 const comentarioRoutes = require('./routes/comentarioRoutes')
-// const atividadeRoutes = require('./routes/atividadeRoutes'); 
 const atividadeRoutes = require('./routes/atividadeRoutes')
+const participantesDesafiosRoutes = require('./routes/participantesDesafiosRoutes')
 
 // Configurações do aplicativo
 const app = express();
@@ -38,6 +38,7 @@ app.use('/empresas', empresaRoutes);
 app.use('/desafios', desafioRoutes);
 app.use('/atividades', atividadeRoutes); 
 app.use('/comentarios', comentarioRoutes)
+app.use('/participantes', participantesDesafiosRoutes)
 
 app.get('/home', (request, response) => {
     response.sendFile('index.html', { root: __dirname });

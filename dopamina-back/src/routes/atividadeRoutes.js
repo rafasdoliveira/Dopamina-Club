@@ -14,6 +14,11 @@ router.get('/:id', async (request, response) => {
     await atividadeController.obterAtividade(request, response);
 });
 
+router.get('/:id/comentarios', async (request, response) => {
+    console.log('Rota GET /atividades/:id/comentarios ');
+    await atividadeController.buscarAtividadeComComentarios(request, response);
+});
+
 router.put('/:id', async (request, response) => {
     console.log('Rota PUT /atividades/:id chamada');
     await atividadeController.atualizarAtividade(request, response);
