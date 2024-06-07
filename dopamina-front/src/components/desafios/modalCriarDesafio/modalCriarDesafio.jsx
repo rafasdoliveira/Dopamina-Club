@@ -14,21 +14,31 @@ const Modal = ({ isOpen, onClose }) => {
     titulo: '',
     data_inicial: '',
     data_final: '',
-    tipo: 'publico',
+    tipo: '',
     descricao: '',
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        return;
+      }
+
       const response = await axios.post(
         'http://localhost:8081/desafios',
         desafio,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
-
-      alert(response.data.message);
-      console.log({ response });
-      setDesafio('');
+      console.log(response);
+      alert('Desafio criado com sucesso!');
     } catch (error) {
       console.error('Erro:', error);
     }
@@ -50,11 +60,11 @@ const Modal = ({ isOpen, onClose }) => {
         <h2>Criar Novo Desafio</h2>
         <form onSubmit={handleSubmit}>
           <div className={styles.input__group}>
-            <label>Título</label>
+            <label htmlFor="titulo">Título</label>
             <Input
               icon={<GoPencil />}
               type="text"
-              id="form"
+              id="titulo"
               value={desafio.titulo}
               onChange={(e) =>
                 setDesafio({ ...desafio, titulo: e.target.value })
@@ -63,11 +73,11 @@ const Modal = ({ isOpen, onClose }) => {
             />
           </div>
           <div className={styles.input__group}>
-            <label>Data Inicial</label>
+            <label htmlFor="data_inicial">Data Inicial</label>
             <Input
               icon={<GoCalendar />}
               type="date"
-              id="form"
+              id="data_inicial"
               value={desafio.data_inicial}
               onChange={(e) =>
                 setDesafio({ ...desafio, data_inicial: e.target.value })
@@ -75,11 +85,11 @@ const Modal = ({ isOpen, onClose }) => {
             />
           </div>
           <div className={styles.input__group}>
-            <label>Data Final</label>
+            <label htmlFor="data_final">Data Final</label>
             <Input
               icon={<GoCalendar />}
               type="date"
-              id="form"
+              id="data_final"
               value={desafio.data_final}
               onChange={(e) =>
                 setDesafio({ ...desafio, data_final: e.target.value })
@@ -87,9 +97,9 @@ const Modal = ({ isOpen, onClose }) => {
             />
           </div>
           <div className={styles.input__group}>
-            <label>Tipo do Desafio</label>
+            <label htmlFor="tipo">Tipo do Desafio</label>
             <Select
-              id="mySelect"
+              id="tipo"
               name="tipo"
               value={desafio.tipo}
               onChange={(e) => setDesafio({ ...desafio, tipo: e.target.value })}
@@ -97,9 +107,9 @@ const Modal = ({ isOpen, onClose }) => {
             />
           </div>
           <div className={styles.input__group}>
-            <label>Descrição</label>
+            <label htmlFor="descricao">Descrição</label>
             <Textarea
-              id="textarea"
+              id="descricao"
               placeholder="Crie uma descrição para o Desafio"
               value={desafio.descricao}
               onChange={(e) =>

@@ -23,10 +23,11 @@ const Login = () => {
 
     try {
       const response = await axios.post('http://localhost:8081/login', login);
-      console.log(response);
+      const token = response.data.token;
+      localStorage.setItem('token', token);
       setTimeout(() => {
         navigate('/dashboard');
-      }, 1000);
+      }, 500);
     } catch (error) {
       let errorMessage =
         'Ocorreu um erro ao realizar o login. Por favor, tente novamente mais tarde.';

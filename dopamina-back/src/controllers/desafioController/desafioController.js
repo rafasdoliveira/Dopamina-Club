@@ -2,8 +2,8 @@ const supabase = require('../../db/db');
 const jwt = require('jsonwebtoken');
 
 const criarDesafio = async (request, response) => {
-    const { titulo, data_inicial, data_final, descricao } = request.body;
-    const campos = { titulo, data_inicial, data_final, descricao };
+    const { titulo, data_inicial, data_final, descricao, tipo } = request.body;
+    const campos = { titulo, data_inicial, data_final, descricao, tipo };
 
     const token = request.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
@@ -18,7 +18,7 @@ const criarDesafio = async (request, response) => {
     try {
         const { data: desafio, error: insiraError } = await supabase
             .from('desafios')
-            .insert([{ titulo, data_inicial, data_final, descricao, criado_por: userId }]);
+            .insert([{ titulo, data_inicial, data_final, descricao, tipo, criado_por: userId }]);
 
         if (insiraError) {
             console.error('Erro ao criar desafio: ', insiraError);

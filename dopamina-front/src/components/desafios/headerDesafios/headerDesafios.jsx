@@ -8,7 +8,6 @@ const HeaderDesafios = ({ title }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCriarDesafio = () => {
-    console.log('clicou');
     setIsModalOpen(true);
   };
 

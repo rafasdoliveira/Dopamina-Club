@@ -1,18 +1,39 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../button/button';
+import { MdLogin, MdExitToApp } from 'react-icons/md';
 
 import styles from './header.module.scss';
 
 const Header = () => {
-  const [navLinks] = useState([
+  const [navLinks, setNavLinks] = useState([
     { id: 1, path: '/', text: 'Sobre' },
     { id: 2, path: '/', text: 'Funcionalidades' },
   ]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const navigate = useNavigate('/');
-  const handleNavigate = () => {
-    navigate('/login');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+      setNavLinks([]);
+    }
+  }, []);
+
+  const handleLoginLogout = () => {
+    if (isLoggedIn) {
+      localStorage.removeItem('token');
+      setIsLoggedIn(false);
+      setNavLinks([
+        { id: 1, path: '/', text: 'Sobre' },
+        { id: 2, path: '/', text: 'Funcionalidades' },
+      ]);
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -32,7 +53,13 @@ const Header = () => {
         </ul>
       </nav>
       <nav className={styles.navButtons}>
-        <Button id="header" text="Login" onClick={handleNavigate} />
+        <Button
+          // id="header"
+          text={isLoggedIn ? 'Logout' : 'Login'}
+          onClick={handleLoginLogout}
+          icon={isLoggedIn ? <MdExitToApp /> : <MdLogin />}
+          id={isLoggedIn ? styles.logoutButton : styles.loginButton}
+        />
       </nav>
     </header>
   );

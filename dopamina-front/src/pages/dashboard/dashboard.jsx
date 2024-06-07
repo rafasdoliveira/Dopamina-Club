@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../../components/header/header';
 import Sidebar from '../../components/sidebar/sidebar';
 import styles from './dashboard.module.scss';
@@ -12,6 +12,13 @@ const Feed = () => {
   const [selectedItem, setSelectedItem] = useState('Meu Perfil');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/');
+    }
+  }, [navigate]);
+
   const renderContent = () => {
     switch (selectedItem) {
       case 'Meu Perfil':
@@ -23,7 +30,8 @@ const Feed = () => {
       case 'Desafios Privados':
         return <DesafiosPrivados />;
       case 'Sair':
-        return navigate('/');
+        navigate('/');
+        return null;
       default:
         return null;
     }

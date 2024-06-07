@@ -1,180 +1,154 @@
-// import axios from 'axios';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import styles from './perfil.module.scss';
-import { MdEdit, MdCancel, MdOutlineDoneAll } from 'react-icons/md';
+import { MdEdit, MdCancel, MdDoneAll } from 'react-icons/md';
+import { FaUser, FaEnvelope, FaPhone, FaLock, FaUserAlt } from 'react-icons/fa';
+import Input from '../form/input/input';
 
 const Perfil = () => {
   const [userData, setUserData] = useState(null);
-  const [profileImage, setProfileImage] = useState(null);
-  const [coverImage, setCoverImage] = useState(null);
+  const [editedData, setEditedData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedData, setEditedData] = useState({});
-
-  // Função para definir dados mockados
-  const handleUsuario = async () => {
-    const mockData = {
-      nome: 'Rafael Oliveira',
-      email: 'rafasdoliveira@outlook.com',
-      telefone: '+55 85 9 9799-5271',
-      senha: '********',
-      usuario: 'rafasdoliveira',
-      profileImage: 'path/to/profileImage.jpg',
-      coverImage: 'path/to/coverImage.jpg',
-    };
-    setUserData(mockData);
-    setProfileImage(mockData.profileImage);
-    setCoverImage(mockData.coverImage);
-    setEditedData(mockData);
-    console.log(mockData);
-  };
 
   useEffect(() => {
-    handleUsuario();
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8081/usuarios/me', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        setUserData(response.data);
+        setEditedData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUserData();
   }, []);
 
-  const handleProfileImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
-      setEditedData({ ...editedData, profileImage: imageUrl });
+  const handleEdit = async () => {
+    // Ao clicar em editar, fazemos uma nova requisição para obter os dados atualizados
+    try {
+      const response = await axios.get('http://localhost:8081/usuarios/me', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setUserData(response.data);
+      setEditedData(response.data);
+      setIsEditing(true);
+    } catch (error) {
+      console.error(error);
     }
-  };
-
-  const handleCoverImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setCoverImage(imageUrl);
-      setEditedData({ ...editedData, coverImage: imageUrl });
-    }
-  };
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setEditedData({ ...editedData, [name]: value });
-  };
-
-  const handleEdit = () => {
-    setIsEditing(!isEditing);
   };
 
   const handleSave = async () => {
     try {
-      // await axios.put('http://localhost:8081/usuarios/47', editedData);
+      await axios.put('http://localhost:8081/usuarios/me', editedData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       setUserData(editedData);
+      setEditedData(null);
       setIsEditing(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   return (
     <div className={styles.profileContainer}>
       {userData && (
         <div className={styles.profileContent}>
-          <div className={styles.coverImageContainer}>
-            {coverImage && (
-              <img
-                src={coverImage}
-                alt="Foto de capa"
-                className={styles.coverImage}
-              />
-            )}
-            {isEditing && (
-              <input
-                type="file"
-                onChange={handleCoverImageChange}
-                className={styles.fileInput}
-              />
-            )}
-          </div>
-          <div className={styles.profileImageContainer}>
-            {profileImage && (
-              <img
-                src={profileImage}
-                alt="Foto de perfil"
-                className={styles.profileImage}
-              />
-            )}
-            {isEditing && (
-              <input
-                type="file"
-                onChange={handleProfileImageChange}
-                className={styles.fileInput}
-              />
-            )}
-          </div>
           <div className={styles.userInfo}>
-            <div>
-              {isEditing ? (
-                <input
-                  type="text"
-                  name="nome"
-                  value={editedData.nome}
-                  onChange={handleInputChange}
-                />
-              ) : (
-                <span>Nome: {userData.nome}</span>
-              )}
+            <div className={styles.input__group}>
+              <label>Nome completo</label>
+              <Input
+                value={isEditing ? editedData.nome : userData.nome}
+                icon={<FaUser />}
+                type="text"
+                id="nome"
+                placeholder="Insira seu nome"
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
             </div>
-            <div>
-              {isEditing ? (
-                <input
-                  type="text"
-                  name="email"
-                  value={editedData.email}
-                  onChange={handleInputChange}
-                />
-              ) : (
-                <span>Email: {userData.email}</span>
-              )}
+            <div className={styles.input__group}>
+              <label>Usuário</label>
+              <Input
+                value={isEditing ? editedData.usuario : userData.usuario}
+                icon={<FaUserAlt />}
+                type="text"
+                id="usuario"
+                placeholder="Insira seu usuário"
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
             </div>
-            <div>
-              {isEditing ? (
-                <input
-                  type="text"
-                  name="telefone"
-                  value={editedData.telefone}
-                  onChange={handleInputChange}
-                />
-              ) : (
-                <span>Telefone: {userData.telefone}</span>
-              )}
+            <div className={styles.input__group}>
+              <label>Email</label>
+              <Input
+                value={isEditing ? editedData.email : userData.email}
+                icon={<FaEnvelope />}
+                type="text"
+                id="email"
+                placeholder="Insira seu email"
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
             </div>
-            <div>
-              {isEditing ? (
-                <input
-                  type="password"
-                  name="senha"
-                  value={editedData.senha}
-                  onChange={handleInputChange}
-                />
-              ) : (
-                <span>Senha: {userData.senha}</span>
-              )}
+            <div className={styles.input__group}>
+              <label>Telefone</label>
+              <Input
+                value={isEditing ? editedData.telefone : userData.telefone}
+                icon={<FaPhone />}
+                type="text"
+                id="telefone"
+                placeholder="Insira seu telefone"
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
             </div>
-            <div>
-              {isEditing ? (
-                <input
-                  type="text"
-                  name="usuario"
-                  value={editedData.usuario}
-                  onChange={handleInputChange}
-                />
-              ) : (
-                <span>Usuário: {userData.usuario}</span>
-              )}
+            <div className={styles.input__group}>
+              <label>Senha</label>
+              <Input
+                value={isEditing ? editedData.senha : '********'}
+                icon={<FaLock />}
+                type="password"
+                id="senha"
+                placeholder="Insira sua senha"
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
             </div>
           </div>
-          <button onClick={handleEdit}>
-            {isEditing ? <MdCancel /> : <MdEdit />}
-          </button>
-          {isEditing && (
-            <button onClick={handleSave}>
-              <MdOutlineDoneAll />
-            </button>
-          )}
+          <div className={styles.perfilButtons}>
+            {!isEditing && (
+              <button onClick={handleEdit}>
+                <MdEdit />
+              </button>
+            )}
+            {isEditing && (
+              <>
+                <button onClick={handleSave}>
+                  <MdDoneAll />
+                </button>
+                <button onClick={() => setIsEditing(false)}>
+                  <MdCancel />
+                </button>
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>

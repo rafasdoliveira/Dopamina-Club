@@ -29,7 +29,7 @@ const login = async (request, response) => {
         if (usuario) {
             if (bcrypt.compareSync(senha, usuario.senha)) {
                 console.log(usuario.id)
-                const token = jwt.sign({ userId: usuario.id, tipo: 'usuario' }, secret, { expiresIn: '1d' });
+                const token = jwt.sign({ userId: usuario.id, tipo: 'usuario' }, secret, { expiresIn: '4d' });
                 return response.status(200).json({ message: 'Login realizado com sucesso', auth: true, token });
             } else {
                 return response.status(401).json({ error: 'Senha incorreta' });
