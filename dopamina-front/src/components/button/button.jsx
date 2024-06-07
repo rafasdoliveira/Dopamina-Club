@@ -7,6 +7,7 @@ const Button = ({ id, type, text, onClick, icon }) => {
     home: styles.tertiaryButton,
     form: '',
     atividade: styles.atividadeButton,
+    modalCriarDesafio: styles.modalCriarDesafio,
   };
 
   const buttonClass = classMap[id] || styles.primaryButton;

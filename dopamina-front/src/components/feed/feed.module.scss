@@ -1,114 +1,51 @@
-.feedContainer {
-    display: flex;
+.feed {
+  width: 100%;
+  height: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px; 
+  padding: 10px;
+  justify-content: flex-start;
+  max-width: 1200px; 
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+}
+
+.feed__header {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 1150px;
+  height: 80px;
+  margin: 10px 0px;
+  padding: 5px;
+
+  span {
     width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    gap: 20px;
-    border-radius: 10px;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-left: 10px;
   }
+
   
-  .sidebar {
-    flex: 1;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #fff;
-  
-    button {
-      display: block;
-      margin-bottom: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      color: #fff;
-      background-color: #fc4c02;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-  
-      &:hover {
-        background-color: #e64300;
-      }
-    }
-  
-    h2 {
-      color: #333;
-      margin-bottom: 20px;
-    }
-  
-    img {
-      width: 100%;
-      height: auto;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-  
-    p {
-      color: #666;
-      line-height: 1.5;
-    }
   }
-  
-  .mainContent {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
+
+.dados {
+  display: flex;
+  justify-content: space-between;
+
+  .desafio__data {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 250px;
   }
-  
-  .enviarAtividade {
-    margin-bottom: 20px;
-  
-    textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 14px;
-      color: #333;
-      resize: vertical;
-      background-color: #f9f9f9;
-    }
-  
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      color: #fff;
-      background-color: #fc4c02;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-  
-      &:hover {
-        background-color: #e64300;
-      }
-    }
+
+  .atividades {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 880px;
   }
-  
-  .atividadesEnviadas {
-    h3 {
-      color: #333;
-      margin-bottom: 10px;
-    }
-  
-    ul {
-      list-style: none;
-      padding: 0;
-  
-      li {
-        background-color: #f9f9f9;
-        margin-bottom: 10px;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 14px;
-        color: #333;
-      }
-    }
-  }
-  
+}
+

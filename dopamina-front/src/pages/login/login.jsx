@@ -24,7 +24,11 @@ const Login = () => {
     try {
       const response = await axios.post('http://localhost:8081/login', login);
       const token = response.data.token;
-      localStorage.setItem('token', token);
+      const bearerToken = `Bearer ${token}`;
+      sessionStorage.setItem('token', bearerToken);
+
+      axios.defaults.headers.common['Authorization'] = bearerToken;
+
       setTimeout(() => {
         navigate('/dashboard');
       }, 500);

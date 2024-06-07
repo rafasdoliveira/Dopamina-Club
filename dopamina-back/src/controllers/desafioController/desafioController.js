@@ -40,8 +40,8 @@ const obterDesafio = async (request, response) => {
     try {
         const { data: desafio, error } = await supabase
             .from('desafios')
-            .select('*')
-            .eq('criado_por', userId)
+            .select('*, criado_por(nome, email)')
+            .eq('criado_por', userId);
 
         if (error) {
             console.error('Erro ao obter desafio: ', error);
@@ -68,7 +68,7 @@ const obterTodosDesafios = async (request, response) => {
     try {
         const { data: desafios, error } = await supabase
             .from('desafios')
-            .select('*');
+            .select('*, criado_por(nome, email)');
 
         if (error) {
             console.error('Erro ao obter desafios: ', error);
@@ -191,7 +191,6 @@ const deletarDesafio = async (request, response) => {
             .select('*')
             .eq('id', desafio_id)
             .eq('criado_por', userId)
-            // .single();
 
         if (buscaError) {
             console.error('Erro ao buscar desafio: ', buscaError);

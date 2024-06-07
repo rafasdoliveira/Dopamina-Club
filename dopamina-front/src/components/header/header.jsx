@@ -15,7 +15,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token) {
       setIsLoggedIn(true);
       setNavLinks([]);
@@ -24,7 +24,7 @@ const Header = () => {
 
   const handleLoginLogout = () => {
     if (isLoggedIn) {
-      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
       setIsLoggedIn(false);
       setNavLinks([
         { id: 1, path: '/', text: 'Sobre' },

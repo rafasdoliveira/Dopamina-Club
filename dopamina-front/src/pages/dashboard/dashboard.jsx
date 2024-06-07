@@ -1,19 +1,22 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Header from '../../components/header/header';
 import Sidebar from '../../components/sidebar/sidebar';
-import styles from './dashboard.module.scss';
 import Perfil from '../../components/perfil/perfil';
+import Feed from '../../components/feed/feed';
 import MeusDesafios from '../../components/desafios/meusDesafios/meusDesafios';
 import DesafiosPublicos from '../../components/desafios/desafiosPublicos/desafiosPublicos';
 import DesafiosPrivados from '../../components/desafios/desafiosPrivados/desafiosPrivados';
-import { useNavigate } from 'react-router-dom';
 
-const Feed = () => {
+import styles from './dashboard.module.scss';
+
+const Dashboard = () => {
   const [selectedItem, setSelectedItem] = useState('Meu Perfil');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (!token) {
       navigate('/');
     }
@@ -23,6 +26,8 @@ const Feed = () => {
     switch (selectedItem) {
       case 'Meu Perfil':
         return <Perfil />;
+      case 'Feed':
+        return <Feed />;
       case 'Meus Desafios':
         return <MeusDesafios />;
       case 'Desafios Públicos':
@@ -48,4 +53,4 @@ const Feed = () => {
   );
 };
 
-export default Feed;
+export default Dashboard;

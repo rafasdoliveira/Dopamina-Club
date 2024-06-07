@@ -1,16 +1,40 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import Card from '../card/card';
 import HeaderDesafios from '../headerDesafios/headerDesafios';
 import styles from './desafiosPrivados.module.scss';
 
-const DesafiosPublicos = () => {
-  const desafio = {
-    imagem: 'img',
-    nome: 'Desafio dos Amigos',
-    dataInicial: '01/05/2024',
-    dataFinal: '31/05/2024',
-    tipo: 'Privado',
-    descricao: 'Descrição do Desafio...',
-  };
+const DesafiosPrivados = () => {
+  const [desafios, setDesafios] = useState([]);
+
+  useEffect(() => {
+    const fetchDesafios = async () => {
+      const token = sessionStorage.getItem('token');
+
+      try {
+        const response = await axios.get('http://localhost:8081/desafios/', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(response.data.desafiosEnumerados);
+        if (Array.isArray(response.data.desafiosEnumerados)) {
+          const desafiosPrivados = response.data.desafiosEnumerados.filter(
+            (desafio) =>
+              desafio.tipo &&
+              (desafio.tipo.toLowerCase() === 'privado' ||
+                desafio.tipo.toLowerCase() === 'private'),
+          );
+          setDesafios(desafiosPrivados);
+        } else {
+          console.error('Os dados retornados não são um array.');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchDesafios();
+  }, []);
 
   return (
     <div className={styles.meus_desafios_container}>
@@ -19,10 +43,9 @@ const DesafiosPublicos = () => {
       </div>
 
       <div className={styles.meus_desafios}>
-        {[...Array(5)].map((_, index) => (
+        {desafios.map((desafio, index) => (
           <Card
             key={index}
-            imagem={desafio.imagem}
             nome={desafio.nome}
             dataInicial={desafio.dataInicial}
             dataFinal={desafio.dataFinal}
@@ -35,4 +58,4 @@ const DesafiosPublicos = () => {
   );
 };
 
-export default DesafiosPublicos;
+export default DesafiosPrivados;

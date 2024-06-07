@@ -40,8 +40,9 @@
 }
 
 @mixin homeButton {
-  width: 30%;
+  width: 25%;
   height: 40px;
+  padding: 5px;
   border: none;
   border-radius: 5px;
   background-color: #e85d04;
@@ -67,8 +68,18 @@
 }
 
 .atividadeButton {
-  @include homeButton;
-  width: 170px;
+  height: 40px;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #e85d04;
+  color: #fff;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between;
+  width: 130px;
   font-weight: 500;
 }
 

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import styles from './headerDesafios.module.scss';
 import Button from '../../button/button';
 import Modal from '../modalCriarDesafio/modalCriarDesafio';
+import { IoMdAdd } from 'react-icons/io';
 
 const HeaderDesafios = ({ title }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,6 +24,7 @@ const HeaderDesafios = ({ title }) => {
         </div>
         <div className={styles.headerButton}>
           <Button
+            icon={<IoMdAdd />}
             onClick={handleCriarDesafio}
             id="atividade"
             text="Criar Desafio"

@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import styles from './sidebar.module.scss';
+import { FaPager } from 'react-icons/fa';
 import { FaLock, FaUnlock, FaUserLarge } from 'react-icons/fa6';
 import { FiLogOut } from 'react-icons/fi';
 import { GoGoal } from 'react-icons/go';
@@ -13,6 +14,12 @@ const Sidebar = ({ onSelectItem }) => {
             <FaUserLarge />
           </span>
           <span>Meu Perfil</span>
+        </li>
+        <li onClick={() => onSelectItem('Feed')}>
+          <span>
+            <FaPager />
+          </span>
+          <span>Feed</span>
         </li>
         <li onClick={() => onSelectItem('Meus Desafios')}>
           <span>

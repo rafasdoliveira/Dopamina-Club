@@ -1,15 +1,15 @@
 /* eslint-disable react/prop-types */
-import styles from './modalCriarDesafio.module.scss';
+import { useState } from 'react';
+import axios from 'axios';
 import Input from '../../form/input/input';
 import Button from '../../button/button';
-import { useState } from 'react';
-import { IoIosCloseCircle } from 'react-icons/io';
-import { GoPencil, GoCalendar } from 'react-icons/go';
 import Select from '../../form/select/select';
-import axios from 'axios';
 import Textarea from '../../form/textarea/textarea';
+import styles from './modalCriarDesafio.module.scss';
+import { GoPencil, GoCalendar } from 'react-icons/go';
+import { IoIosCloseCircle, IoMdAdd } from 'react-icons/io';
 
-const Modal = ({ isOpen, onClose }) => {
+const Modal = ({ isOpen, onClose, onDesafioCriado }) => {
   const [desafio, setDesafio] = useState({
     titulo: '',
     data_inicial: '',
@@ -18,12 +18,40 @@ const Modal = ({ isOpen, onClose }) => {
     descricao: '',
   });
 
+  const handleClose = () => {
+    setDesafio({
+      titulo: '',
+      data_inicial: '',
+      data_final: '',
+      tipo: '',
+      descricao: '',
+    });
+    onClose();
+  };
+
+  const validateForm = () => {
+    const camposPendentes = [];
+    if (!desafio.titulo) camposPendentes.push('Título');
+    if (!desafio.data_inicial) camposPendentes.push('Data Inicial');
+    if (!desafio.data_final) camposPendentes.push('Data Final');
+    if (!desafio.tipo) camposPendentes.push('Tipo do Desafio');
+    if (!desafio.descricao) camposPendentes.push('Descrição');
+    return camposPendentes;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const token = localStorage.getItem('token');
+    const camposPendentes = validateForm();
+    if (camposPendentes.length > 0) {
+      alert(
+        `Os seguintes campos são obrigatórios: ${camposPendentes.join(', ')}`,
+      );
+      return;
+    }
 
+    try {
+      const token = sessionStorage.getItem('token');
       if (!token) {
         return;
       }
@@ -33,20 +61,22 @@ const Modal = ({ isOpen, onClose }) => {
         desafio,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
           },
         },
       );
       console.log(response);
       alert('Desafio criado com sucesso!');
+      onDesafioCriado();
+      handleClose();
     } catch (error) {
       console.error('Erro:', error);
     }
   };
 
   const options = [
-    { value: 'publico', label: 'Público' },
-    { value: 'privado', label: 'Privado' },
+    { value: 'Público', label: 'Público' },
+    { value: 'Privado', label: 'Privado' },
   ];
 
   if (!isOpen) return null;
@@ -54,7 +84,7 @@ const Modal = ({ isOpen, onClose }) => {
   return (
     <div className={styles.modal_overlay}>
       <div className={styles.modal}>
-        <button className={styles.close_button} onClick={onClose}>
+        <button className={styles.close_button} onClick={handleClose}>
           <IoIosCloseCircle />
         </button>
         <h2>Criar Novo Desafio</h2>
@@ -99,6 +129,7 @@ const Modal = ({ isOpen, onClose }) => {
           <div className={styles.input__group}>
             <label htmlFor="tipo">Tipo do Desafio</label>
             <Select
+              text="Selecione o tipo de desafio"
               id="tipo"
               name="tipo"
               value={desafio.tipo}
@@ -118,7 +149,12 @@ const Modal = ({ isOpen, onClose }) => {
             />
           </div>
           <div className={styles.button_desafio}>
-            <Button id="header" text="Criar Desafio" type="submit" />
+            <Button
+              icon={<IoMdAdd />}
+              id="atividade"
+              text="Criar Desafio"
+              type="submit"
+            />
           </div>
         </form>
       </div>

@@ -13,11 +13,12 @@ const Perfil = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/usuarios/me', {
+        const response = await axios.get(`http://localhost:8081/usuarios/me`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`,
           },
         });
+        console.log(response);
         setUserData(response.data);
         setEditedData(response.data);
       } catch (error) {
@@ -28,28 +29,22 @@ const Perfil = () => {
   }, []);
 
   const handleEdit = async () => {
-    // Ao clicar em editar, fazemos uma nova requisição para obter os dados atualizados
-    try {
-      const response = await axios.get('http://localhost:8081/usuarios/me', {
+    const response = await axios.put(
+      `http://localhost:8081/usuarios/${userData.id}`,
+      {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${sessionStorage.getItem('token')}`,
         },
-      });
-      setUserData(response.data);
-      setEditedData(response.data);
-      setIsEditing(true);
-    } catch (error) {
-      console.error(error);
-    }
+      },
+    );
+    console.log(response);
+    setIsEditing(true);
+    setEditedData({ ...userData });
   };
 
   const handleSave = async () => {
     try {
-      await axios.put('http://localhost:8081/usuarios/me', editedData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      await axios.put('http://localhost:8081/usuarios/me', editedData);
       setUserData(editedData);
       setEditedData(null);
       setIsEditing(false);
